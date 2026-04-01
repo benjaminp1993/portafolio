@@ -136,7 +136,6 @@
         /* When in portfolio mode, hide landing but show active bar as right panel video */
         .landing.in-portfolio {
             pointer-events: none;
-            z-index: 105;
         }
 
         .landing.in-portfolio::before,
@@ -152,6 +151,7 @@
             width: 53%;
             height: 100vh;
             pointer-events: none;
+            z-index: 201;
         }
 
         .landing.in-portfolio .landing-bar.active-bar {
@@ -412,7 +412,7 @@
         .contact-trigger {
             position: fixed;
             bottom: 1.5rem;
-            left: calc(5% + 55px + 42% - 6rem);
+            right: 54%;
             z-index: 150;
         }
 
