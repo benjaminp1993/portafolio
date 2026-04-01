@@ -828,8 +828,8 @@
                 "Festival Magialdia (Vitoria-Gasteiz, España) festival nacional de magia de España.",
                 "Festival Sinka (Helsinki, Finlandia) exposición de ilusionismo contemporáneo de Kalle Nio."
             ],
-            youtubeId: "",
-            photos: []
+            youtubeId: "6J2eR0hQhwM",
+            photos: ["al-parecer-1.jpg"]
         },
         "scarlet": {
             title: "Scarlet, 2021 (Cortometraje)",
@@ -1284,7 +1284,7 @@
         }
 
         if (data.youtubeId) {
-            html += `<div class="work-video-embed"><iframe src="https://www.youtube.com/embed/${data.youtubeId}?rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+            html += `<div class="work-video-embed"><iframe src="https://www.youtube.com/embed/${data.youtubeId}?rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&color=white" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
         }
 
         if (data.photos && data.photos.length > 0) {
