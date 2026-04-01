@@ -140,10 +140,12 @@
             pointer-events: none;
         }
 
-        .landing.in-portfolio::before,
+        .landing.in-portfolio::before {
+            opacity: 0 !important;
+        }
+
         .landing.in-portfolio .landing-name {
             opacity: 0 !important;
-            display: none;
         }
 
         .landing.in-portfolio .landing-bar {
@@ -156,6 +158,7 @@
             pointer-events: none;
             z-index: 201;
             flex: none;
+            transition: opacity 0.5s ease;
         }
 
         .landing.in-portfolio .landing-bar.active-bar {
@@ -165,7 +168,6 @@
         .landing.in-portfolio .landing-bar .landing-bar-label,
         .landing.in-portfolio .landing-bar::after {
             opacity: 0 !important;
-            display: none;
         }
 
         /* Artist name - styles defined above in intro animation */
@@ -417,8 +419,15 @@
         .contact-trigger {
             position: fixed;
             bottom: 1.5rem;
-            right: 54%;
-            z-index: 150;
+            right: 1.5rem;
+            z-index: 250;
+            opacity: 0;
+            transition: opacity 0.5s ease 3.5s;
+        }
+
+        .contact-trigger.visible {
+            opacity: 1;
+            transition: opacity 0.5s ease;
         }
 
         .contact-trigger a {
@@ -426,14 +435,24 @@
             font-weight: 400;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            color: var(--color-text-muted);
+            color: rgba(255,255,255,0.6);
             text-decoration: none;
             padding: 0.5rem 1rem;
-            border: 1px solid rgba(0,0,0,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
             transition: all 0.3s ease;
         }
 
         .contact-trigger a:hover {
+            color: #fff;
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .contact-trigger.light a {
+            color: var(--color-text-muted);
+            border-color: rgba(0,0,0,0.12);
+        }
+
+        .contact-trigger.light a:hover {
             color: var(--color-text);
             border-color: rgba(0,0,0,0.3);
         }
@@ -567,6 +586,20 @@
             border-color: var(--color-text);
         }
 
+        .contact-toast {
+            font-size: 0.72rem;
+            color: var(--color-hover);
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            margin-top: 0.8rem;
+        }
+
+        .contact-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .category-title {
             font-size: 0.8rem;
             font-weight: 400;
@@ -624,6 +657,7 @@
             overflow: hidden;
             position: relative;
             background: transparent;
+            z-index: 202;
         }
 
         .showreel-container {
@@ -749,7 +783,6 @@
         .portfolio-back { animation-delay: 0.05s; }
         .site-header { animation-delay: 0.1s; }
         .bio-section { animation-delay: 0.15s; }
-        .contact-trigger { animation-delay: 0.2s; }
         .category-title { animation-delay: 0.25s; }
 
         .works-list li {
@@ -861,9 +894,6 @@
                 <p class="bio-availability" id="bioAvailability">Cortometrajes, videoclips, videoperformance y animación.</p>
             </section>
 
-            <nav class="contact-trigger fade-in">
-                <a href="#" id="contactBtn" onclick="document.getElementById('contactModal').classList.add('active'); return false;">Contacto</a>
-            </nav>
 
             <h3 class="category-title fade-in" id="categoryTitle">Comercial</h3>
 
@@ -886,6 +916,13 @@
     </div>
 
     <!-- ================================================
+         CONTACT BUTTON (always visible)
+         ================================================ -->
+    <nav class="contact-trigger" id="contactTrigger">
+        <a href="#" onclick="document.getElementById('contactModal').classList.add('active'); return false;">Contacto</a>
+    </nav>
+
+    <!-- ================================================
          CONTACT MODAL
          ================================================ -->
     <div class="contact-modal" id="contactModal">
@@ -898,10 +935,11 @@
             <p class="contact-bio">Realizador audiovisual chileno con más de una década de trayectoria en dirección, montaje, animación y producción. Su trabajo abarca largometrajes, cortometrajes, videoclips, videoperformance, animación y piezas comerciales. Ha sido parte de festivales internacionales en España, Finlandia y Chile, obteniendo el premio del público en FECICH con su largometraje Las Veletas. Colabora con artistas, músicos, marcas e instituciones culturales. Basado en Santiago de Chile.</p>
             <div class="contact-divider"></div>
             <div class="contact-buttons">
-                <a href="mailto:benjaminp1993@gmail.com">Email</a>
+                <a href="mailto:benjaminp1993@gmail.com" onclick="copyEmail()">Email</a>
                 <a href="https://instagram.com/gtlhcetude_3" target="_blank" rel="noopener">Instagram</a>
                 <a href="https://www.youtube.com/@ABPOTUBE" target="_blank" rel="noopener">YouTube</a>
             </div>
+            <span class="contact-toast" id="contactToast">Email copiado al portapapeles</span>
         </div>
     </div>
 
@@ -911,7 +949,19 @@
     // ============================================================
     setTimeout(() => {
         document.getElementById('landing').classList.add('revealed');
+        document.getElementById('contactTrigger').classList.add('visible');
     }, 3000);
+
+    // ============================================================
+    // COPY EMAIL
+    // ============================================================
+    function copyEmail() {
+        navigator.clipboard.writeText('benjaminp1993@gmail.com').then(() => {
+            const toast = document.getElementById('contactToast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }).catch(() => {});
+    }
 
     // ============================================================
     // DATOS DE OBRAS
@@ -1309,6 +1359,7 @@
     // ============================================================
     document.querySelectorAll('.landing-bar').forEach(bar => {
         bar.addEventListener('click', () => {
+            if (landing.classList.contains('in-portfolio')) return;
             currentCategory = bar.dataset.category;
             openPortfolio(currentCategory);
         });
@@ -1354,6 +1405,7 @@
 
         // Transition: fade out landing, show portfolio
         landing.classList.add('exit');
+        document.getElementById('contactTrigger').classList.add('light');
 
         setTimeout(() => {
             landing.classList.add('in-portfolio');
@@ -1404,18 +1456,18 @@
     portfolioBack.addEventListener('click', () => {
         closeWork();
 
-        // Remove active bar
-        document.querySelectorAll('.landing-bar').forEach(b => b.classList.remove('active-bar'));
-
+        // First fade out portfolio
         portfolioPage.classList.remove('visible');
+        document.getElementById('contactTrigger').classList.remove('light');
+
+        // Simultaneously start transitioning landing back
+        landing.classList.remove('exit');
+        landing.classList.remove('in-portfolio');
 
         setTimeout(() => {
             portfolioPage.classList.remove('active');
-            landing.classList.remove('in-portfolio');
-            requestAnimationFrame(() => {
-                landing.classList.remove('exit');
-            });
-        }, 500);
+            document.querySelectorAll('.landing-bar').forEach(b => b.classList.remove('active-bar'));
+        }, 600);
     });
 
     // ============================================================
@@ -1488,7 +1540,6 @@
         });
     }
 
-    // Escape key
     // Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
