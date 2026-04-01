@@ -133,39 +133,39 @@
             z-index: -1;
         }
 
-        /* When in portfolio mode, reposition the active category's iframe to cover right panel */
+        /* When in portfolio mode, hide landing but keep videos alive */
         .landing.in-portfolio {
-            visibility: hidden;
+            opacity: 0;
             pointer-events: none;
+            z-index: -1;
         }
 
-        .landing.in-portfolio .landing-bar {
+        /* Persistent video layer - always running behind everything */
+        .video-bg-layer {
             position: fixed;
             top: 0;
             right: 0;
             width: 53%;
             height: 100vh;
-            visibility: hidden;
-            pointer-events: none;
-            z-index: 99;
-        }
-
-        .landing.in-portfolio .landing-bar.active-bar {
-            visibility: visible;
+            z-index: 50;
+            overflow: hidden;
+            display: none;
             pointer-events: none;
         }
 
-        .landing.in-portfolio .landing-bar.active-bar .landing-bar-bg {
-            width: 100%;
-            height: 100%;
+        .video-bg-layer.active {
+            display: block;
+        }
+
+        .video-bg-layer iframe {
             position: absolute;
-            inset: 0;
-        }
-
-        .landing.in-portfolio .landing-bar-label,
-        .landing.in-portfolio .landing-bar::after,
-        .landing.in-portfolio .landing-name {
-            visibility: hidden;
+            top: 50%;
+            left: 50%;
+            width: 400%;
+            height: 400%;
+            transform: translate(-50%, -50%);
+            border: none;
+            pointer-events: none;
         }
 
         /* Artist name - styles defined above in intro animation */
@@ -369,7 +369,12 @@
 
         .portfolio-back:hover { color: var(--color-text); }
 
-        .site-header { margin-bottom: 1.4rem; }
+        .site-header {
+            margin-bottom: 1.4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
 
         .artist-name {
             font-size: 1.45rem;
@@ -408,43 +413,158 @@
             margin-top: 0.1rem;
         }
 
-        .contact-links {
+        /* Contact trigger */
+        .contact-trigger {
             position: fixed;
             bottom: 1.5rem;
-            right: calc(100% - 47% + 1.5rem);
-            z-index: 50;
+            right: 1.5rem;
+            z-index: 150;
         }
 
-        .contact-links a {
-            display: block;
-            font-size: 0.85rem;
+        .contact-trigger a {
+            font-size: 0.75rem;
             font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
             color: var(--color-text-muted);
             text-decoration: none;
-            line-height: 1.5;
-            transition: color 0.2s ease;
-            text-align: right;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(0,0,0,0.12);
+            transition: all 0.3s ease;
         }
 
-        .contact-links a:hover { color: var(--color-text); }
+        .contact-trigger a:hover {
+            color: var(--color-text);
+            border-color: rgba(0,0,0,0.3);
+        }
 
-        .email-toast {
+        /* Contact Modal */
+        .contact-modal {
             position: fixed;
-            bottom: 5.5rem;
-            right: calc(53% + 1.5rem);
-            font-size: 0.7rem;
-            color: var(--color-hover);
+            inset: 0;
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             opacity: 0;
-            transform: translateY(4px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
             pointer-events: none;
-            z-index: 50;
-            text-align: right;
+            transition: opacity 0.4s ease;
         }
 
-        .email-toast.show {
+        .contact-modal.active {
             opacity: 1;
+            pointer-events: all;
+        }
+
+        .contact-modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .contact-modal-card {
+            position: relative;
+            background: var(--color-bg);
+            max-width: 420px;
+            width: 90%;
+            padding: 2.5rem 2.2rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+
+        .contact-modal.active .contact-modal-card {
             transform: translateY(0);
+        }
+
+        .contact-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            background: none;
+            border: none;
+            font-family: var(--font-main);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .contact-modal-close:hover { color: var(--color-text); }
+
+        .contact-photo {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center 20%;
+            margin-bottom: 1.3rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+
+        .contact-name {
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.15rem;
+        }
+
+        .contact-alias {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .contact-bio {
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: var(--color-text-secondary);
+            margin-bottom: 1.5rem;
+            max-width: 340px;
+        }
+
+        .contact-divider {
+            width: 40px;
+            height: 1px;
+            background: rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 0.8rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .contact-buttons a {
+            flex: 1;
+            max-width: 120px;
+            padding: 0.6rem 0;
+            font-family: var(--font-main);
+            font-size: 0.72rem;
+            font-weight: 400;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-text);
+            border: 1px solid rgba(0,0,0,0.15);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .contact-buttons a:hover {
+            background: var(--color-text);
+            color: var(--color-bg);
+            border-color: var(--color-text);
         }
 
         .category-title {
@@ -629,7 +749,7 @@
         .portfolio-back { animation-delay: 0.05s; }
         .site-header { animation-delay: 0.1s; }
         .bio-section { animation-delay: 0.15s; }
-        .contact-links { animation-delay: 0.2s; }
+        .contact-trigger { animation-delay: 0.2s; }
         .category-title { animation-delay: 0.25s; }
 
         .works-list li {
@@ -665,18 +785,8 @@
             .content-panel { width: 100%; height: auto; padding: 1.5rem; overflow-y: visible; }
             .right-panel { width: 100%; height: auto; min-height: 50vh; }
 
-            .contact-links {
-                position: static;
-                margin-bottom: 1.5rem;
-            }
+            .contact-modal-card { max-width: 95%; padding: 2rem 1.5rem 1.5rem; }
 
-            .contact-links a { text-align: left; font-size: 1rem; }
-
-            .email-toast {
-                position: static;
-                margin-top: -0.3rem;
-                margin-bottom: 0.5rem;
-            }
             .showreel-container { position: relative; height: 50vh; }
             .work-detail-container { position: relative; height: auto; padding: 1.5rem; }
         }
@@ -726,6 +836,11 @@
     </div>
 
     <!-- ================================================
+         VIDEO BACKGROUND LAYER - persistent, always playing
+         ================================================ -->
+    <div class="video-bg-layer" id="videoBgLayer"></div>
+
+    <!-- ================================================
          PORTFOLIO PAGE
          ================================================ -->
     <div class="portfolio-page" id="portfolioPage">
@@ -746,17 +861,14 @@
             </header>
 
             <section class="bio-section fade-in">
-                <p class="bio-title">Narrador Visual | Director, Editor y Animador:</p>
-                <p class="bio-description">Construyo mundos y personajes a través del cine y el dibujo.</p>
-                <p class="bio-availability">Disponible para trabajos artísticos, comerciales y corporativos</p>
+                <p class="bio-title" id="bioTitle">Director, Editor, Animador y Productor.</p>
+                <p class="bio-description" id="bioDescription">Construyo mundos y personajes a través del cine y el dibujo.</p>
+                <p class="bio-availability" id="bioAvailability">Cortometrajes, videoclips, videoperformance y animación.</p>
             </section>
 
-            <nav class="contact-links fade-in">
-                <a href="#" id="emailLink" onclick="copyEmail(event)">Email</a>
-                <a href="https://instagram.com/gtlhcetude_3" target="_blank" rel="noopener">Instagram</a>
-                <a href="https://www.youtube.com/@ABPOTUBE" target="_blank" rel="noopener">YouTube</a>
+            <nav class="contact-trigger fade-in">
+                <a href="#" id="contactBtn" onclick="document.getElementById('contactModal').classList.add('active'); return false;">Contacto</a>
             </nav>
-            <span class="email-toast" id="emailToast">Email copiado al portapapeles</span>
 
             <h3 class="category-title fade-in" id="categoryTitle">Comercial</h3>
 
@@ -778,6 +890,26 @@
 
     </div>
 
+    <!-- ================================================
+         CONTACT MODAL
+         ================================================ -->
+    <div class="contact-modal" id="contactModal">
+        <div class="contact-modal-backdrop" onclick="document.getElementById('contactModal').classList.remove('active')"></div>
+        <div class="contact-modal-card">
+            <button class="contact-modal-close" onclick="document.getElementById('contactModal').classList.remove('active')">Cerrar</button>
+            <img class="contact-photo" src="foto-contacto.jpg" alt="Benjamín Pérez">
+            <div class="contact-name">Benjamín Pérez</div>
+            <div class="contact-alias">Bautista Bermuda</div>
+            <p class="contact-bio">Narrador visual chileno. Director, editor, animador y productor. Su obra transita entre la ficción, el documental y lo comercial, construyendo mundos a través del cine, la animación y el dibujo. Ha participado en festivales internacionales en España, Finlandia y Chile, y colabora con artistas, músicos, marcas e instituciones. Basado en Santiago.</p>
+            <div class="contact-divider"></div>
+            <div class="contact-buttons">
+                <a href="mailto:benjaminp1993@gmail.com">Email</a>
+                <a href="https://instagram.com/gtlhcetude_3" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://www.youtube.com/@ABPOTUBE" target="_blank" rel="noopener">YouTube</a>
+            </div>
+        </div>
+    </div>
+
     <script>
     // ============================================================
     // INTRO ANIMATION — reveal after 3 seconds
@@ -785,20 +917,6 @@
     setTimeout(() => {
         document.getElementById('landing').classList.add('revealed');
     }, 3000);
-
-    // ============================================================
-    // COPY EMAIL
-    // ============================================================
-    function copyEmail(e) {
-        e.preventDefault();
-        navigator.clipboard.writeText(['benjaminp1993','gmail.com'].join('@')).then(() => {
-            const toast = document.getElementById('emailToast');
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-        }).catch(() => {
-            window.location.href = 'mail' + 'to:' + ['benjaminp1993','gmail.com'].join('@');
-        });
-    }
 
     // ============================================================
     // DATOS DE OBRAS
@@ -1205,10 +1323,44 @@
         // Set category title
         categoryTitle.textContent = categoryNames[category] || category;
 
-        // Mark active bar and switch landing to portfolio mode
+        // Update bio per category
+        const bios = {
+            ficcion: {
+                title: "Director, Editor, Animador y Productor.",
+                description: "Construyo mundos y personajes a través del cine y el dibujo.",
+                availability: "Cortometrajes, videoclips, videoperformance y animación."
+            },
+            comercial: {
+                title: "Director, Editor, Animador y Productor.",
+                description: "Traduzco la identidad de marcas, proyectos e instituciones en piezas audiovisuales con mirada autoral.",
+                availability: "Disponible para trabajos comerciales, corporativos e institucionales."
+            },
+            documental: {
+                title: "Director, Editor, Animador y Productor.",
+                description: "Registro y construyo relatos desde la observación, el territorio y las personas.",
+                availability: "Documental, registro y difusión audiovisual."
+            }
+        };
+
+        const bio = bios[category];
+        if (bio) {
+            document.getElementById('bioTitle').textContent = bio.title;
+            document.getElementById('bioDescription').textContent = bio.description;
+            document.getElementById('bioAvailability').textContent = bio.availability;
+        }
+
+        // Mark active bar and show video in background layer
         document.querySelectorAll('.landing-bar').forEach(b => b.classList.remove('active-bar'));
         const activeBar = document.querySelector(`.landing-bar[data-category="${category}"]`);
         if (activeBar) activeBar.classList.add('active-bar');
+
+        // Copy the iframe src to the background video layer
+        const videoBgLayer = document.getElementById('videoBgLayer');
+        const sourceIframe = document.getElementById('video-' + category);
+        if (sourceIframe) {
+            videoBgLayer.innerHTML = `<iframe src="${sourceIframe.src}" allow="autoplay" allowfullscreen></iframe>`;
+            videoBgLayer.classList.add('active');
+        }
 
         // Filter and populate works
         populateWorksList(category);
@@ -1264,6 +1416,11 @@
     // ============================================================
     portfolioBack.addEventListener('click', () => {
         closeWork();
+
+        // Hide video background layer
+        const videoBgLayer = document.getElementById('videoBgLayer');
+        videoBgLayer.classList.remove('active');
+        videoBgLayer.innerHTML = '';
 
         // Remove active bar
         document.querySelectorAll('.landing-bar').forEach(b => b.classList.remove('active-bar'));
@@ -1351,7 +1508,10 @@
 
     // Escape key
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeWork();
+        if (e.key === 'Escape') {
+            closeWork();
+            document.getElementById('contactModal').classList.remove('active');
+        }
     });
     </script>
 
