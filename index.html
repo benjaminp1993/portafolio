@@ -1563,6 +1563,10 @@
         workDetail.classList.add('active');
         workDetail.scrollTop = 0;
 
+        // Hide the landing video bar so work detail is visible
+        const activeBar = document.querySelector('.landing-bar.active-bar');
+        if (activeBar) activeBar.style.opacity = '0';
+
         // Highlight
         document.querySelectorAll('.works-list a').forEach(a => a.classList.remove('active'));
         const activeLink = document.querySelector(`.works-list a[data-work="${workId}"]`);
@@ -1574,6 +1578,10 @@
         showreelContainer.classList.remove('hidden');
         workDetailContent.innerHTML = '';
         document.querySelectorAll('.works-list a').forEach(a => a.classList.remove('active'));
+
+        // Show the landing video bar again
+        const activeBar = document.querySelector('.landing-bar.active-bar');
+        if (activeBar) activeBar.style.opacity = '1';
     }
 
     workDetailBack.addEventListener('click', closeWork);
