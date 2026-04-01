@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benjamín Pérez — Bautista Bermuda</title>
+    <style>
+        :root {
+            --color-bg: #ffffff;
+            --color-text: #1a1a1a;
+            --color-text-muted: rgba(0, 0, 0, 0.38);
+            --color-text-secondary: rgba(0, 0, 0, 0.55);
+            --color-hover: #0066cc;
+            --font-main: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background: #000;
+            color: var(--color-text);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* ================================================
+           LANDING PAGE
+           ================================================ */
+        /* ================================================
+           LANDING PAGE + INTRO ANIMATION
+           ================================================ */
+
+        /* Black overlay that fades out */
+        .landing::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #000;
+            z-index: 10;
+            transition: opacity 1.5s ease;
+            pointer-events: none;
+        }
+
+        .landing.revealed::before {
+            opacity: 0;
+        }
+
+        /* Name starts centered, moves to top */
+        .landing-name {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 210;
+            pointer-events: none;
+            transition: top 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .landing.revealed .landing-name {
+            top: 1.8rem;
+            transform: translate(-50%, 0);
+        }
+
+        .landing-name h1 {
+            font-family: var(--font-main);
+            font-size: 2.4rem;
+            font-weight: 300;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 2px 30px rgba(0,0,0,0.5);
+        }
+
+        .landing-name .landing-subtitle {
+            font-family: var(--font-main);
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0);
+            margin-top: 0.2rem;
+            text-shadow: 0 1px 15px rgba(0,0,0,0.4);
+            transition: color 1s ease 1.8s;
+        }
+
+        .landing.revealed .landing-name .landing-subtitle {
+            color: rgba(255,255,255,0.55);
+        }
+
+        /* Category labels hidden until revealed */
+        .landing-bar-label span {
+            font-family: var(--font-main);
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0);
+            transition: color 0.3s ease, letter-spacing 0.4s ease;
+        }
+
+        .landing.revealed .landing-bar-label span {
+            color: rgba(255,255,255,0.75);
+            transition: color 1s ease 1.5s, letter-spacing 0.4s ease;
+        }
+
+        .landing-bar:hover .landing-bar-label span {
+            color: #fff;
+            letter-spacing: 0.55em;
+        }
+
+        .landing {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .landing.exit {
+            opacity: 0;
+            transform: scale(1.02);
+            pointer-events: none;
+        }
+
+        .landing.hidden {
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* When in portfolio mode, reposition the active category's iframe to cover right panel */
+        .landing.in-portfolio {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .landing.in-portfolio .landing-bar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 53%;
+            height: 100vh;
+            visibility: hidden;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .landing.in-portfolio .landing-bar.active-bar {
+            visibility: visible;
+            pointer-events: none;
+        }
+
+        .landing.in-portfolio .landing-bar.active-bar .landing-bar-bg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+        }
+
+        .landing.in-portfolio .landing-bar-label,
+        .landing.in-portfolio .landing-bar::after,
+        .landing.in-portfolio .landing-name {
+            visibility: hidden;
+        }
+
+        /* Artist name - styles defined above in intro animation */
+
+        /* Category bar */
+        .landing-bar {
+            flex: 1;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: flex 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            pointer-events: none;
+        }
+
+        .landing.revealed .landing-bar {
+            pointer-events: all;
+        }
+
+        .landing-bar:hover {
+            flex: 1.5;
+        }
+
+        .landing-bar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            transition: background 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .landing-bar:hover::after {
+            background: rgba(0,0,0,0.15);
+        }
+
+        /* Divider lines between bars */
+        .landing-bar + .landing-bar {
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        /* Background media */
+        .landing-bar-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .landing-bar-bg iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400%;
+            height: 400%;
+            transform: translate(-50%, -50%);
+            border: none;
+            pointer-events: none;
+        }
+
+        .landing-bar-bg video,
+        .landing-bar-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .landing-bar-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .landing-bar:nth-child(1) .landing-bar-placeholder {
+            background: linear-gradient(180deg, #1a1a2e 0%, #2d2d44 50%, #1a1a2e 100%);
+        }
+        .landing-bar:nth-child(2) .landing-bar-placeholder {
+            background: linear-gradient(180deg, #2e1a1a 0%, #442d2d 50%, #2e1a1a 100%);
+        }
+        .landing-bar:nth-child(3) .landing-bar-placeholder {
+            background: linear-gradient(180deg, #1a2e1e 0%, #2d4432 50%, #1a2e1e 100%);
+        }
+
+        .landing-bar-placeholder span {
+            color: rgba(255,255,255,0.15);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        /* Category label - positioning only, styles in intro animation */
+        .landing-bar-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* ================================================
+           PORTFOLIO PAGE
+           ================================================ */
+        .portfolio-page {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: none;
+            background: transparent;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .portfolio-page.active {
+            display: flex;
+            height: 100vh;
+        }
+
+        .portfolio-page.visible {
+            opacity: 1;
+        }
+
+        /* --- Image panel --- */
+        .image-panel {
+            width: 5%;
+            min-width: 55px;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+            background: #111;
+        }
+
+        .parallax-image-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .parallax-image {
+            width: 180%;
+            height: 140%;
+            object-fit: cover;
+            object-position: center 35%;
+            position: absolute;
+            top: -20%;
+            left: -40%;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-placeholder span {
+            color: rgba(255,255,255,0.2);
+            font-size: 0.55rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            writing-mode: vertical-rl;
+        }
+
+        /* --- Content panel --- */
+        .content-panel {
+            width: 42%;
+            height: 100vh;
+            padding: 2rem 2.2rem 3rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
+            background: var(--color-bg);
+        }
+
+        .portfolio-back {
+            display: inline-block;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: var(--font-main);
+            padding: 0;
+            margin-bottom: 1.5rem;
+            transition: color 0.2s;
+        }
+
+        .portfolio-back:hover { color: var(--color-text); }
+
+        .site-header { margin-bottom: 1.4rem; }
+
+        .artist-name {
+            font-size: 1.45rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            line-height: 1.25;
+        }
+
+        .artist-alias {
+            font-size: 1.45rem;
+            font-weight: 400;
+            color: var(--color-text-muted);
+            line-height: 1.25;
+        }
+
+        .bio-section { margin-bottom: 1.2rem; }
+
+        .bio-title {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            line-height: 1.4;
+            margin-bottom: 0.15rem;
+        }
+
+        .bio-description {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--color-text-muted);
+            line-height: 1.45;
+        }
+
+        .bio-availability {
+            font-size: 0.78rem;
+            color: var(--color-text-muted);
+            margin-top: 0.1rem;
+        }
+
+        .contact-links {
+            position: fixed;
+            bottom: 1.5rem;
+            right: calc(100% - 47% + 1.5rem);
+            z-index: 50;
+        }
+
+        .contact-links a {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            line-height: 1.5;
+            transition: color 0.2s ease;
+            text-align: right;
+        }
+
+        .contact-links a:hover { color: var(--color-text); }
+
+        .email-toast {
+            position: fixed;
+            bottom: 5.5rem;
+            right: calc(53% + 1.5rem);
+            font-size: 0.7rem;
+            color: var(--color-hover);
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            z-index: 50;
+            text-align: right;
+        }
+
+        .email-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .category-title {
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .works-list {
+            list-style: none;
+            counter-reset: works;
+            padding: 0;
+        }
+
+        .works-list li {
+            counter-increment: works;
+            margin-bottom: 0.1rem;
+        }
+
+        .works-list li a {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--color-text);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0.4rem;
+            line-height: 1.6;
+            transition: color 0.2s ease;
+        }
+
+        .works-list li a::before {
+            content: counter(works) ".";
+            display: inline-block;
+            min-width: 1.8rem;
+            text-align: right;
+            color: var(--color-text-muted);
+            font-size: 0.88rem;
+            font-weight: 300;
+        }
+
+        .works-list li a:hover { color: var(--color-hover); font-weight: 500; }
+        .works-list li a.active { color: var(--color-hover); font-weight: 500; }
+        .works-list li a .work-year { color: var(--color-text-muted); }
+        .works-list li a:hover .work-year,
+        .works-list li a.active .work-year { color: var(--color-hover); }
+
+        /* --- Right panel --- */
+        .right-panel {
+            flex: 1;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background: transparent;
+        }
+
+        .showreel-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+            transition: opacity 0.4s ease;
+            overflow: hidden;
+        }
+
+        .showreel-container iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400%;
+            height: 400%;
+            transform: translate(-50%, -50%);
+            border: none;
+            pointer-events: none;
+        }
+
+        .showreel-container.hidden { opacity: 0; pointer-events: none; }
+
+        .showreel-video { width: 100%; height: 100%; object-fit: cover; }
+
+        .video-panel-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-panel-placeholder span {
+            color: rgba(255,255,255,0.2);
+            font-size: 0.7rem;
+            text-align: center;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            line-height: 1.6;
+        }
+
+        .sound-toggle {
+            position: absolute;
+            bottom: 1.2rem;
+            right: 1.2rem;
+            z-index: 10;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.7);
+            font-family: var(--font-main);
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.45rem 0.7rem;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: all 0.25s ease;
+        }
+
+        .sound-toggle:hover { background: rgba(0,0,0,0.7); color: #fff; }
+
+        /* Work detail */
+        .work-detail-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+            background: var(--color-bg);
+            overflow-y: auto;
+            padding: 2rem 2.2rem 3rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .work-detail-container.active { opacity: 1; pointer-events: all; }
+
+        .work-detail-back {
+            display: inline-block;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: var(--font-main);
+            padding: 0;
+            margin-bottom: 1.5rem;
+            transition: color 0.2s;
+        }
+
+        .work-detail-back:hover { color: var(--color-text); }
+
+        .work-detail-title { font-size: 1.5rem; font-weight: 500; line-height: 1.25; margin-bottom: 0.3rem; }
+        .work-detail-roles { font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: 1.4rem; line-height: 1.5; }
+        .work-detail-description { font-size: 0.92rem; line-height: 1.65; margin-bottom: 1.3rem; }
+        .work-detail-description p { margin-bottom: 0.7rem; }
+
+        .work-detail-festivals { font-size: 0.85rem; line-height: 1.7; color: var(--color-text-secondary); margin-bottom: 1.8rem; list-style: none; }
+        .work-detail-festivals li::before { content: "• "; color: var(--color-text-muted); }
+
+        .work-video-embed { width: 100%; aspect-ratio: 16/9; background: #000; margin-bottom: 1.8rem; overflow: hidden; }
+        .work-video-embed iframe { width: 100%; height: 100%; border: none; }
+
+        .work-photos { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem; }
+        .work-photos img { width: 100%; height: auto; display: block; }
+
+        /* ================================================
+           ANIMATIONS
+           ================================================ */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(8px);
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+        .portfolio-back { animation-delay: 0.05s; }
+        .site-header { animation-delay: 0.1s; }
+        .bio-section { animation-delay: 0.15s; }
+        .contact-links { animation-delay: 0.2s; }
+        .category-title { animation-delay: 0.25s; }
+
+        .works-list li {
+            opacity: 0;
+            transform: translateY(6px);
+            animation: fadeUp 0.35s ease forwards;
+        }
+
+        .works-list li:nth-child(1) { animation-delay: 0.3s; }
+        .works-list li:nth-child(2) { animation-delay: 0.33s; }
+        .works-list li:nth-child(3) { animation-delay: 0.36s; }
+        .works-list li:nth-child(4) { animation-delay: 0.39s; }
+        .works-list li:nth-child(5) { animation-delay: 0.42s; }
+        .works-list li:nth-child(6) { animation-delay: 0.45s; }
+        .works-list li:nth-child(7) { animation-delay: 0.48s; }
+        .works-list li:nth-child(8) { animation-delay: 0.51s; }
+        .works-list li:nth-child(9) { animation-delay: 0.54s; }
+        .works-list li:nth-child(10) { animation-delay: 0.57s; }
+        .works-list li:nth-child(n+11) { animation-delay: 0.6s; }
+
+        /* ================================================
+           MOBILE
+           ================================================ */
+        @media (max-width: 900px) {
+            /* Landing */
+            .landing-bar:hover { flex: none; }
+            .landing-name h1 { font-size: 1.5rem; letter-spacing: 0.25em; }
+
+            /* Portfolio */
+            body { overflow: auto; height: auto; }
+            .portfolio-page.active { flex-direction: column; height: auto; }
+            .image-panel { display: none; }
+            .content-panel { width: 100%; height: auto; padding: 1.5rem; overflow-y: visible; }
+            .right-panel { width: 100%; height: auto; min-height: 50vh; }
+
+            .contact-links {
+                position: static;
+                margin-bottom: 1.5rem;
+            }
+
+            .contact-links a { text-align: left; font-size: 1rem; }
+
+            .email-toast {
+                position: static;
+                margin-top: -0.3rem;
+                margin-bottom: 0.5rem;
+            }
+            .showreel-container { position: relative; height: 50vh; }
+            .work-detail-container { position: relative; height: auto; padding: 1.5rem; }
+        }
+
+        /* Scrollbar */
+        .content-panel::-webkit-scrollbar,
+        .work-detail-container::-webkit-scrollbar { width: 3px; }
+        .content-panel::-webkit-scrollbar-track,
+        .work-detail-container::-webkit-scrollbar-track { background: transparent; }
+        .content-panel::-webkit-scrollbar-thumb,
+        .work-detail-container::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================
+         LANDING PAGE
+         ================================================ -->
+    <div class="landing" id="landing">
+
+        <div class="landing-name">
+            <h1>Benjamín Pérez</h1>
+            <p class="landing-subtitle">Narrador Visual</p>
+        </div>
+
+        <div class="landing-bar" data-category="ficcion">
+            <div class="landing-bar-bg" id="bg-ficcion">
+                <iframe id="video-ficcion" src="https://www.youtube.com/embed/6J2eR0hQhwM?autoplay=1&loop=1&mute=1&playlist=6J2eR0hQhwM&controls=0&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&start=25" allow="autoplay" allowfullscreen></iframe>
+            </div>
+            <div class="landing-bar-label"><span>Ficción</span></div>
+        </div>
+
+        <div class="landing-bar" data-category="comercial">
+            <div class="landing-bar-bg" id="bg-comercial">
+                <iframe id="video-comercial" src="https://www.youtube.com/embed/k_p6zgyVhrI?autoplay=1&loop=1&mute=1&playlist=k_p6zgyVhrI&controls=0&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&start=25" allow="autoplay" allowfullscreen></iframe>
+            </div>
+            <div class="landing-bar-label"><span>Comercial</span></div>
+        </div>
+
+        <div class="landing-bar" data-category="documental">
+            <div class="landing-bar-bg" id="bg-documental">
+                <iframe id="video-documental" src="https://www.youtube.com/embed/PU5esIzCQ6M?autoplay=1&loop=1&mute=1&playlist=PU5esIzCQ6M&controls=0&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&start=25" allow="autoplay" allowfullscreen></iframe>
+            </div>
+            <div class="landing-bar-label"><span>Documental</span></div>
+        </div>
+
+    </div>
+
+    <!-- ================================================
+         PORTFOLIO PAGE
+         ================================================ -->
+    <div class="portfolio-page" id="portfolioPage">
+
+        <div class="image-panel" id="imagePanel">
+            <div class="parallax-image-wrapper">
+                <img class="parallax-image" src="autorretrato.jpg" alt="Autorretrato">
+            </div>
+        </div>
+
+        <div class="content-panel" id="contentPanel">
+
+            <button class="portfolio-back fade-in" id="portfolioBack">← Inicio</button>
+
+            <header class="site-header fade-in">
+                <div class="artist-name">Benjamín Pérez</div>
+                <div class="artist-alias">Bautista Bermuda</div>
+            </header>
+
+            <section class="bio-section fade-in">
+                <p class="bio-title">Narrador Visual | Director, Editor y Animador:</p>
+                <p class="bio-description">Construyo mundos y personajes a través del cine y el dibujo.</p>
+                <p class="bio-availability">Disponible para trabajos artísticos, comerciales y corporativos</p>
+            </section>
+
+            <nav class="contact-links fade-in">
+                <a href="#" id="emailLink" onclick="copyEmail(event)">Email</a>
+                <a href="https://instagram.com/gtlhcetude_3" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://www.youtube.com/@ABPOTUBE" target="_blank" rel="noopener">YouTube</a>
+            </nav>
+            <span class="email-toast" id="emailToast">Email copiado al portapapeles</span>
+
+            <h3 class="category-title fade-in" id="categoryTitle">Comercial</h3>
+
+            <ol class="works-list" id="worksList">
+                <!-- Populated by JS based on category -->
+            </ol>
+        </div>
+
+        <div class="right-panel">
+            <div class="showreel-container" id="showreelContainer">
+                <!-- iframe gets moved here from landing -->
+            </div>
+
+            <div class="work-detail-container" id="workDetail">
+                <button class="work-detail-back" id="workDetailBack">← Volver</button>
+                <div id="workDetailContent"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+    // ============================================================
+    // INTRO ANIMATION — reveal after 3 seconds
+    // ============================================================
+    setTimeout(() => {
+        document.getElementById('landing').classList.add('revealed');
+    }, 3000);
+
+    // ============================================================
+    // COPY EMAIL
+    // ============================================================
+    function copyEmail(e) {
+        e.preventDefault();
+        navigator.clipboard.writeText(['benjaminp1993','gmail.com'].join('@')).then(() => {
+            const toast = document.getElementById('emailToast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }).catch(() => {
+            window.location.href = 'mail' + 'to:' + ['benjaminp1993','gmail.com'].join('@');
+        });
+    }
+
+    // ============================================================
+    // DATOS DE OBRAS
+    // Cada obra tiene un campo "category": "comercial", "ficcion", o "documental"
+    // ============================================================
+    const worksData = {
+
+        // ===== FICCIÓN =====
+        "las-veletas": {
+            title: "Las Veletas, 2021 (Largometraje)",
+            category: "ficcion",
+            roles: "Postproducción, sonido, montaje.",
+            description: `<p>Celina, una mujer sin hogar ni raíces, deambula robando objetos, sólo para tener algo propio que aún así es ajeno. A través de los objetos que roba, establece vínculos mágicos con otros personajes, viéndose involucrada en historias paralelas de las que no puede escapar.</p>
+            <p>Tiene su estreno en FECICH 2021. Ganadora del premio del público.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "al-parecer": {
+            title: "Al Parecer, 2024 (Cortometraje)",
+            category: "ficcion",
+            roles: "Dirección, animación, postproducción, montaje.",
+            description: `<p>¿Qué es esto? ¿Un pez, dices? Entra y descúbrelo tú mismo. El fantástico mundo del ilusionista Arturo Fuenzalida se despliega ante el espectador en esta osada videoperformance.</p>
+            <p>Tiene su recorrido por festivales de ilusionismo y artes circenses:</p>`,
+            festivals: [
+                "Festival Troba'm (Banyoles, España) de Mario López.",
+                "Sooloja (Helsinki, Finlandia) espectáculo de circo contemporáneo.",
+                "Festival Magialdia (Vitoria-Gasteiz, España) festival nacional de magia de España.",
+                "Festival Sinka (Helsinki, Finlandia) exposición de ilusionismo contemporáneo de Kalle Nio."
+            ],
+            youtubeId: "",
+            photos: []
+        },
+        "scarlet": {
+            title: "Scarlet, 2021 (Cortometraje)",
+            category: "ficcion",
+            roles: "Dirección, postproducción, montaje.",
+            description: `<p>Scarlet, una película de venganza. Scarlet folla, mata y muta al ritmo de un beat endiablado. Una Casandra reencarnada que escupe en la boca de Apolo, devolviendo su maldición. Un viaje al corazón del underground Queer latinoamericano, el pulso de una generación distópica, la catarsis de un episodio histórico que nos llevó a la locura.</p>
+            <p>Tiene su estreno en EXCENTRICOFEST 2021.</p>
+            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-top:0.5rem;">Link a un fragmento. Contactar para solicitar link completo.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "animal": {
+            title: "Animal, 2025 (Videoperformance)",
+            category: "ficcion",
+            roles: "Dirección, postproducción, montaje.",
+            description: `<p>Una mujer llega al campo empujada por la urgencia de subsistir y de encontrar un lugar en el mundo del trabajo campesino. Allí recibe un antiguo fundo de manos de una mujer de edad indescifrable, quien le transfiere no solo las labores de la tierra, sino una responsabilidad que parece extenderse más allá de una vida humana. El trabajo es constante, repetitivo, casi ritual, y en esa rutina áspera comienza a erosionarse su antigua identidad.</p>
+            <p>En el aislamiento del paisaje y bajo el mandato silencioso de la naturaleza, algo se despierta en su interior. El primer encuentro con las vacas marca un quiebre íntimo y profundo: en sus cuerpos cautivos reconoce un reflejo de sí misma, una pulsión contenida, un deseo y una violencia que la conectan con lo más primario. Entre el cuidado, la fascinación y la transformación, la frontera entre lo humano y lo animal se vuelve porosa, dando inicio a un viaje de despojo, entrega y fusión, donde la identidad se rehace desde la carne, el instinto y la tierra.</p>
+            <p>Videoperformance junto a Camila Garretón.</p>
+            <p style="font-size:0.85rem; color:var(--color-text-muted);">(En postproducción)</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "miersias": {
+            title: "Miersias, 2025 (Cortometraje-Videoperformance)",
+            category: "ficcion",
+            roles: "Dirección, animación, cámara, postproducción, montaje.",
+            description: `<p>Una mujer hecha de piedra volcánica, espíritu femenino anterior al tiempo, se adentra en un bosque oscuro donde el juicio ajeno y el propio arden con la misma intensidad. La naturaleza no consuela y la soledad aprieta; todo pesa, todo observa. Su avance es obstinado, una huida perpetua de aquello que la persigue desde adentro, una sombra sin forma ni descanso.</p>
+            <p>Al pie del volcán, en una quebrada surcada por antiguos ríos de lava, el paso se aquieta. Allí siembra y nombra las primeras flores, brotes mínimos que la orientan como aves migratorias en la mañana, marcando un sendero posible hacia la sanación.</p>
+            <p>Videoperformance junto a la artista Camila Garretón.</p>
+            <p style="font-size:0.85rem; color:var(--color-text-muted);">(Aún no estrenada)</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "un-dia-normal": {
+            title: "Un día normal, 2024 (Videoclip)",
+            category: "ficcion",
+            roles: "Dirección, animación, postproducción, montaje.",
+            description: `<p>Una joven atraviesa la rutina diaria envuelta en presencias sobrenaturales que se filtran en lo cotidiano. En su intento por escapar del tedio y hallar una calma esquiva, se enfrenta a una inquietud íntima que contamina cada gesto y cada instante. Lo extraordinario no irrumpe para salvarla, sino para revelar la fricción constante entre su mundo interior y una realidad que nunca termina de aquietarse.</p>
+            <p>Videoclip para la artista Silvestre33</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "son-de-metal": {
+            title: "Son de Metal, 2024 (Videoclip)",
+            category: "ficcion",
+            roles: "Dirección, postproducción, montaje.",
+            description: `<p>En una suerte de Tierra 2, una segunda oportunidad que volvió a desviarse de la peor forma, un grupo de obreros habita un mundo dominado por el extractivismo total. Todo es minado, extraído y agotado sin pausa. Al hallar un mineral extraño, regresan a la fábrica para transformarlo en largas piezas metálicas que, una vez refinadas, se convierten en joyas. Son los únicos objetos capaces de cruzar las fronteras de clase y acceder a una dimensión ajena y reluciente, un mundo de pureza aparente que permanece invisible para quienes lo sostienen.</p>
+            <p>Videoclip para COCHPRO</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "bali": {
+            title: "Bali, 2020 (Videoclip)",
+            category: "ficcion",
+            roles: "Dirección, producción, cámara, postproducción, montaje.",
+            description: `<p>Video contextualizado en las marchas ciudadanas ocurridas durante el estallido social en Chile, que comenzaron el 18 de octubre de 2019, teniendo como escenario principal "Plaza de la dignidad" y sus alrededores. (Santiago de Chile).</p>
+            <p>Videoclip para Andrea Paz.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "ix": {
+            title: "IX, 2019 (Videoclip)",
+            category: "ficcion",
+            roles: "Dirección, cámara, postproducción, montaje.",
+            description: `<p>Videoclip para Alejandro Palacios, del casete KOKOI</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "orion": {
+            title: "Orión, de Lejos, 2020 (Videoclip)",
+            category: "ficcion",
+            roles: "Dirección, cámara, postproducción, montaje.",
+            description: `<p>Videoclip para Hablemos del Alma, segundo single del álbum Programática</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "take-a-seat": {
+            title: "Take a Seat, 2024 (Nanometraje)",
+            category: "ficcion",
+            roles: "Dirección, postproducción, montaje.",
+            description: `<p>Creado en Santiago de Chile, Al Parecer (Arturo Fuenzalida) y Alain Simonov exploran una realidad fallida (glitched).</p>
+            <p>Codirigido por Aneta Kernová y Benjamín Pérez<br>Fotografía: Manuel Urzua<br>Banda sonora: Mucho Sueño</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "manifiesto": {
+            title: "Manifiesto, 2026",
+            category: "ficcion",
+            roles: "Edición, Montaje, Corrección de Color.",
+            description: `<p>Mono, antiguo líder de su manada, abandona su rol y se interna en la naturaleza en un viaje de despojo e identidad. En tres actos —bosque, agua y volcán— su cuerpo transita desde la huida y la ruptura, hacia la calma y finalmente la confrontación con la soledad. En ese recorrido, encarnado por Camila Garretón, comprende que la transformación no ocurre en el aislamiento absoluto, sino en la relación con el otro.</p>
+            <p>Inspirado en Así habló Zaratustra, el cortometraje articula una búsqueda espiritual donde cuerpo y paisaje se funden como un solo lenguaje.</p>
+            <p style="font-size:0.85rem; color:var(--color-text-muted);">(Aún no estrenada)</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "lobo": {
+            title: "Lobo, 2024 (Animación)",
+            category: "ficcion",
+            roles: "Dirección, animación, montaje.",
+            description: `<p>Videoclip visualizer para ZAPLA.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "amigas": {
+            title: "Amigas, 2020 (Videoclip)",
+            category: "ficcion",
+            roles: "Dirección, cámara, montaje, postproducción.",
+            description: `<p>Videoclip para la banda BVHA.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "mujeres": {
+            title: "Mujeres Quimera, 2017 (Cortometraje)",
+            category: "ficcion",
+            roles: "Montaje, postproducción.",
+            description: `<p>Cortometraje realizado junto a Antonia Hidalgo.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "acuerdate": {
+            title: "Acuérdate de la Oreja, 2017 (Cortometraje)",
+            category: "ficcion",
+            roles: "Montaje, postproducción, sonido, dirección musical.",
+            description: `<p>Cortometraje realizado junto a Antonia Hidalgo.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "jardin": {
+            title: "Jardín, 2024 (Videoclip)",
+            category: "ficcion",
+            roles: "Dirección, producción.",
+            description: `<p>Videoclip realizado junto a Antonia Hidalgo.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "annoying-one": {
+            title: "Annoying One, 2018 (Videoclip)",
+            category: "ficcion",
+            roles: "Montaje.",
+            description: `<p>Videoclip realizado para Harmony Molina.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "show": {
+            title: "Show de los Mupphiss, 2019 (Videoclip)",
+            category: "ficcion",
+            roles: "Cámara, montaje.",
+            description: `<p>Videoclip realizado para Harmony Molina.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "samba": {
+            title: "Sambaracita, 2023",
+            category: "ficcion",
+            roles: "Dirección, cámara, montaje.",
+            description: `<p>Videoclip realizado junto a Antonia Hidalgo.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "en-el-jardin": {
+            title: "En el Jardín, 2021 (Videoperformance)",
+            category: "ficcion",
+            roles: "Montaje.",
+            description: `<p>Video para Nicolas Alvarado.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "lovebuzz": {
+            title: "Lovebuzz, 2022 (Videoclip)",
+            category: "ficcion",
+            roles: "Dirección, Montaje.",
+            description: `<p>Video para la banda Talisman.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "bello": {
+            title: "Cuando todo parecía bello sin serlo, 2023 (Animación)",
+            category: "ficcion",
+            roles: "Animación.",
+            description: `<p>Animación para la obra de teatro "Cuando todo parecía bello sin serlo".</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "las-aguas": {
+            title: "Las Aguas, 2026 (Animación)",
+            category: "ficcion",
+            roles: "Animación de Color.",
+            description: `<p>Videoclip para ZAPLA.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+
+        // ===== COMERCIAL =====
+        "aza": {
+            title: "AZA, 2022 (Video Corporativo)",
+            category: "comercial",
+            roles: "Dirección, producción, montaje, postproducción.",
+            description: `<p>Video corporativo para la empresa Aceros AZA que documenta el ciclo completo del acero. Desde la recolección de chatarra y su transporte, hasta el proceso de fundición y la posterior elaboración de fierros y alambres destinados a la construcción, el registro pone en valor la transformación del material y la lógica industrial que sostiene su producción.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "futuro-usach": {
+            title: "FUTURO USACH, 2023 (Animación)",
+            category: "comercial",
+            roles: "Dirección, montaje.",
+            description: `<p>Servicio de streaming y registro para Futuro Usach 2023, un encuentro interdisciplinario organizado por la Universidad de Santiago de Chile que reunió a la comunidad académica, estudiantil y artística para explorar posibles futuros desde la ciencia, la tecnología, las humanidades y las artes.</p>
+            <p>Durante tres días hubo conferencias, paneles de conversación, experiencias inmersivas y actuaciones que propiciaron el diálogo sobre desafíos contemporáneos y la construcción colectiva de imaginarios futuros, generando una plataforma abierta de reflexión y pensamiento prospectivo.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "recreo": {
+            title: "Recreo en GAM, 2024 (Reels)",
+            category: "comercial",
+            roles: "Dirección, cámara, producción, montaje.",
+            description: `<p>"La experiencia en Recreo se convirtió en una valiosa oportunidad para inmortalizar la congregación de diversas expresiones artísticas latinas, amalgamadas a través de la música en un edificio que carga con una herida histórica. En este contexto, hemos concebido - en alianza con ARCOS - un microdocumental que armoniza de manera coral las voces de varios artistas que participaron en esta fecha. Juntos, reflexionamos con una pizca de metafísica en torno al ritual colectivo de la música y de la capacidad de sanar espacios mediante el baile." Bautista Bermuda</p>
+            <p>Registro del evento Recreo, realizado por primera vez en el GAM, hito relevante al ser la primera instalación de un proyecto de música electrónica y disidencia en un espacio estatal. La instancia activó un ejercicio de memoria en torno a la historia del edificio, desde la UNCTAD hasta su presente, poniendo en diálogo pasado y contemporaneidad.</p>
+            <p>El proyecto funcionó además como experiencia pedagógica para estudiantes de la Escuela de Cine Arcos. A través de una serie de conversaciones colectivas, se diseñó un plan de trabajo donde seis alumnos asumieron roles y responsabilidades en distintas áreas, dando forma a una obra colaborativa que fue evaluada como parte de su examen anual.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "degoya": {
+            title: "Degoya, 2022-2024 (Reels)",
+            category: "comercial",
+            roles: "Dirección, cámara, producción, montaje.",
+            description: `<p>Registros editoriales realizados para la marca de ropa santiaguina Degoya, concebidos como una exploración visual de su identidad, texturas y gestos. Las imágenes buscan expandir el imaginario de la marca más allá de la prenda, situándola en un relato sensible donde el cuerpo, el entorno y la actitud dialogan en un mismo lenguaje contemporáneo.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "creaciones": { title: "Creaciones, 2025", category: "comercial", roles: "", description: "", festivals: [], youtubeId: "", photos: [] },
+        "benito": {
+            title: "Benito Vicente, 2024 (Video Comercial)",
+            category: "comercial",
+            roles: "Dirección, producción, montaje, postproducción.",
+            description: `<p>Video para la pizzería Benito Vicente.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "belenabels": {
+            title: "Belenabels, 2025 (Comercial)",
+            category: "comercial",
+            roles: "Dirección, animación, montaje.",
+            description: `<p>Reel comercial para la marca Belenabels.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "fonapi": {
+            title: "FONAPI, 2025 (Comercial)",
+            category: "comercial",
+            roles: "Dirección, animación, montaje.",
+            description: `<p>Proyecto artístico audiovisual que cruza cine, pintura y animación como un mismo campo de investigación y creación. Desarrollado gracias a un fondo concursable FONAPI y en colaboración con un taller de pintura, el proyecto se construye a partir de obras realizadas por personas diagnosticadas con psicosis y esquizofrenia.</p>
+            <p>A través de visitas, conversaciones y trabajo directo con los usuarios, se desarrolló un proceso de traducción de la pintura hacia una obra animada, entendiendo la animación como extensión del gesto pictórico y del proceso expresivo.</p>
+            <p>El proyecto fue realizado en un corto plazo mediante el uso de tecnologías de vanguardia en inteligencia artificial, lo que permitió volver viable y accesible una obra de animación para un equipo reducido y con recursos limitados, sin perder profundidad autoral ni rigor ético. El trabajo se posiciona en el cruce entre creación contemporánea, mediación cultural, arte y salud mental, explorando nuevas formas de producción y circulación para proyectos autorales.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "matri": {
+            title: "Matrimonios",
+            category: "comercial",
+            roles: "Dirección, cámara, montaje.",
+            description: `<p>Registro de matrimonios.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+
+        // ===== DOCUMENTAL =====
+        "nyavu": {
+            title: "Nyavu ya Kufunga, 2021 (Videoclip)",
+            category: "documental",
+            roles: "Postproducción y montaje.",
+            description: `<p>La pesca con red de cerco, conocida en suajili como nyavu ya kufunga, consiste en desplegar una red que rodea al cardumen objetivo, principalmente peces pelágicos costeros en aguas mar adentro. En algunos casos, los pescadores se lanzan al agua para evitar que los peces escapen del perímetro de captura. Esta técnica representa casi la mitad de la pesca total en la aldea de Gazi, Kenia. Si bien puede generar capturas abundantes, también conlleva numerosos riesgos, especialmente el de regresar sin pesca.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "fiesta-y-pololeo": {
+            title: "Fiesta y Pololeo, 2020 (Cortometraje Documental)",
+            category: "documental",
+            roles: "Postproducción, montaje.",
+            description: `<p>Video difusión para "De pinturas y chicharras". Proyecto financiado por el Fondo Nacional de las Artes y las Culturas, convocatoria 2019. Filmado en la localidad de Puerto Guadal y Mallín Grande, Aisén.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        },
+        "piramide": {
+            title: "Pirámide, 2018 (Video Corporativo)",
+            category: "documental",
+            roles: "Dirección, cámara, producción, montaje, postproducción.",
+            description: `<p>Video corporativo para Pirámida, empresa dedicada a la producción de carne de vacuno guayú libre, donde la salud animal y el bienestar del ecosistema son el eje de una ganadería sustentable. El registro acompaña el pastoreo de un gaucho patagónico en la cordillera, poniendo en valor su vínculo con la tierra y su modo de vida, junto a testimonios de trabajadores, veterinarios y sembradores que sostienen el proyecto desde distintas miradas.</p>`,
+            festivals: [],
+            youtubeId: "",
+            photos: []
+        }
+    };
+
+    // Category display names
+    const categoryNames = {
+        comercial: "Comercial",
+        ficcion: "Ficción",
+        documental: "Documental"
+    };
+
+    // ============================================================
+    // ELEMENTS
+    // ============================================================
+    const landing = document.getElementById('landing');
+    const portfolioPage = document.getElementById('portfolioPage');
+    const categoryTitle = document.getElementById('categoryTitle');
+    const worksList = document.getElementById('worksList');
+    const portfolioBack = document.getElementById('portfolioBack');
+    const showreelContainer = document.getElementById('showreelContainer');
+    const workDetail = document.getElementById('workDetail');
+    const workDetailContent = document.getElementById('workDetailContent');
+    const workDetailBack = document.getElementById('workDetailBack');
+    const imagePanel = document.getElementById('imagePanel');
+    const contentPanel = document.getElementById('contentPanel');
+
+    let currentCategory = null;
+
+    // ============================================================
+    // LANDING → PORTFOLIO
+    // ============================================================
+    document.querySelectorAll('.landing-bar').forEach(bar => {
+        bar.addEventListener('click', () => {
+            currentCategory = bar.dataset.category;
+            openPortfolio(currentCategory);
+        });
+    });
+
+    function openPortfolio(category) {
+        // Set category title
+        categoryTitle.textContent = categoryNames[category] || category;
+
+        // Mark active bar and switch landing to portfolio mode
+        document.querySelectorAll('.landing-bar').forEach(b => b.classList.remove('active-bar'));
+        const activeBar = document.querySelector(`.landing-bar[data-category="${category}"]`);
+        if (activeBar) activeBar.classList.add('active-bar');
+
+        // Filter and populate works
+        populateWorksList(category);
+
+        // Transition: fade out landing, show portfolio
+        landing.classList.add('exit');
+
+        setTimeout(() => {
+            landing.classList.add('in-portfolio');
+            portfolioPage.classList.add('active');
+            requestAnimationFrame(() => {
+                portfolioPage.classList.add('visible');
+            });
+        }, 500);
+    }
+
+    function populateWorksList(category) {
+        worksList.innerHTML = '';
+        let index = 0;
+
+        for (const [id, data] of Object.entries(worksData)) {
+            if (data.category !== category) continue;
+            index++;
+
+            const li = document.createElement('li');
+            li.style.animationDelay = `${0.3 + index * 0.03}s`;
+
+            const a = document.createElement('a');
+            a.href = '#';
+            a.dataset.work = id;
+
+            // Extract year from title if present
+            const yearMatch = data.title.match(/\d{4}/);
+            const displayTitle = data.title.replace(/,?\s*\d{4}.*$/, '');
+            const year = yearMatch ? yearMatch[0] : '';
+
+            a.innerHTML = year
+                ? `${displayTitle}, <span class="work-year">${year}</span>`
+                : displayTitle;
+
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                openWork(id);
+            });
+
+            li.appendChild(a);
+            worksList.appendChild(li);
+        }
+    }
+
+    // ============================================================
+    // PORTFOLIO → LANDING (back)
+    // ============================================================
+    portfolioBack.addEventListener('click', () => {
+        closeWork();
+
+        // Remove active bar
+        document.querySelectorAll('.landing-bar').forEach(b => b.classList.remove('active-bar'));
+
+        portfolioPage.classList.remove('visible');
+
+        setTimeout(() => {
+            portfolioPage.classList.remove('active');
+            landing.classList.remove('in-portfolio');
+            requestAnimationFrame(() => {
+                landing.classList.remove('exit');
+            });
+        }, 500);
+    });
+
+    // ============================================================
+    // WORK DETAIL
+    // ============================================================
+    function openWork(workId) {
+        const data = worksData[workId];
+        if (!data) return;
+
+        let html = `<h1 class="work-detail-title">${data.title}</h1>`;
+        if (data.roles) html += `<p class="work-detail-roles">${data.roles}</p>`;
+        if (data.description) html += `<div class="work-detail-description">${data.description}</div>`;
+
+        if (data.festivals && data.festivals.length > 0) {
+            html += `<ul class="work-detail-festivals">`;
+            data.festivals.forEach(f => html += `<li>${f}</li>`);
+            html += `</ul>`;
+        }
+
+        if (data.youtubeId) {
+            html += `<div class="work-video-embed"><iframe src="https://www.youtube.com/embed/${data.youtubeId}?rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+        }
+
+        if (data.photos && data.photos.length > 0) {
+            html += `<div class="work-photos">`;
+            data.photos.forEach(p => html += `<img src="${p}" alt="${data.title}" loading="lazy">`);
+            html += `</div>`;
+        }
+
+        if (!data.roles && !data.description && !data.youtubeId && (!data.photos || !data.photos.length)) {
+            html += `<p style="color:var(--color-text-muted);margin-top:1rem;font-size:0.88rem;">Contenido pendiente</p>`;
+        }
+
+        workDetailContent.innerHTML = html;
+        showreelContainer.classList.add('hidden');
+        workDetail.classList.add('active');
+        workDetail.scrollTop = 0;
+
+        // Highlight
+        document.querySelectorAll('.works-list a').forEach(a => a.classList.remove('active'));
+        const activeLink = document.querySelector(`.works-list a[data-work="${workId}"]`);
+        if (activeLink) activeLink.classList.add('active');
+    }
+
+    function closeWork() {
+        workDetail.classList.remove('active');
+        showreelContainer.classList.remove('hidden');
+        workDetailContent.innerHTML = '';
+        document.querySelectorAll('.works-list a').forEach(a => a.classList.remove('active'));
+    }
+
+    workDetailBack.addEventListener('click', closeWork);
+
+    // ============================================================
+    // PARALLAX
+    // ============================================================
+    const parallaxImg = imagePanel.querySelector('.parallax-image');
+    if (parallaxImg) {
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 2;
+            const y = (e.clientY / window.innerHeight - 0.5) * 2;
+            // Inverted: mouse right → image shifts left (shows left eye)
+            parallaxImg.style.transform = `translate(${x * -18}px, ${y * -6}px)`;
+        });
+    }
+
+    // Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeWork();
+    });
+    </script>
+
+</body>
+</html>
