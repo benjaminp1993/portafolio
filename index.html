@@ -97,16 +97,17 @@
             letter-spacing: 0.4em;
             text-transform: uppercase;
             color: rgba(255,255,255,0);
-            transition: color 0.3s ease, letter-spacing 0.4s ease;
+            transition: letter-spacing 0.4s ease;
         }
 
         .landing.revealed .landing-bar-label span {
-            color: rgba(255,255,255,0.75);
-            transition: color 1s ease 1.5s, letter-spacing 0.4s ease;
+            color: rgba(255,255,255,0.75) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
         .landing-bar:hover .landing-bar-label span {
-            color: #fff;
+            color: #fff !important;
             letter-spacing: 0.55em;
         }
 
