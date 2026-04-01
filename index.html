@@ -133,39 +133,34 @@
             z-index: -1;
         }
 
-        /* When in portfolio mode, hide landing but keep videos alive */
+        /* When in portfolio mode, hide landing but show active bar as right panel video */
         .landing.in-portfolio {
-            opacity: 0;
             pointer-events: none;
-            z-index: -1;
+            z-index: 105;
         }
 
-        /* Persistent video layer - always running behind everything */
-        .video-bg-layer {
+        .landing.in-portfolio::before,
+        .landing.in-portfolio .landing-name {
+            opacity: 0 !important;
+        }
+
+        .landing.in-portfolio .landing-bar {
+            opacity: 0;
             position: fixed;
             top: 0;
             right: 0;
             width: 53%;
             height: 100vh;
-            z-index: 50;
-            overflow: hidden;
-            display: none;
             pointer-events: none;
         }
 
-        .video-bg-layer.active {
-            display: block;
+        .landing.in-portfolio .landing-bar.active-bar {
+            opacity: 1;
         }
 
-        .video-bg-layer iframe {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 400%;
-            height: 400%;
-            transform: translate(-50%, -50%);
-            border: none;
-            pointer-events: none;
+        .landing.in-portfolio .landing-bar .landing-bar-label,
+        .landing.in-portfolio .landing-bar::after {
+            opacity: 0 !important;
         }
 
         /* Artist name - styles defined above in intro animation */
@@ -417,7 +412,7 @@
         .contact-trigger {
             position: fixed;
             bottom: 1.5rem;
-            right: 1.5rem;
+            left: calc(5% + 55px + 42% - 6rem);
             z-index: 150;
         }
 
@@ -467,9 +462,9 @@
         .contact-modal-card {
             position: relative;
             background: var(--color-bg);
-            max-width: 420px;
+            max-width: 500px;
             width: 90%;
-            padding: 2.5rem 2.2rem 2rem;
+            padding: 3rem 2.5rem 2.5rem;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -501,12 +496,12 @@
         .contact-modal-close:hover { color: var(--color-text); }
 
         .contact-photo {
-            width: 110px;
-            height: 110px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             object-fit: cover;
             object-position: center 20%;
-            margin-bottom: 1.3rem;
+            margin-bottom: 1.5rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.12);
         }
 
@@ -836,11 +831,6 @@
     </div>
 
     <!-- ================================================
-         VIDEO BACKGROUND LAYER - persistent, always playing
-         ================================================ -->
-    <div class="video-bg-layer" id="videoBgLayer"></div>
-
-    <!-- ================================================
          PORTFOLIO PAGE
          ================================================ -->
     <div class="portfolio-page" id="portfolioPage">
@@ -900,7 +890,7 @@
             <img class="contact-photo" src="foto-contacto.jpg" alt="Benjamín Pérez">
             <div class="contact-name">Benjamín Pérez</div>
             <div class="contact-alias">Bautista Bermuda</div>
-            <p class="contact-bio">Narrador visual chileno. Director, editor, animador y productor. Su obra transita entre la ficción, el documental y lo comercial, construyendo mundos a través del cine, la animación y el dibujo. Ha participado en festivales internacionales en España, Finlandia y Chile, y colabora con artistas, músicos, marcas e instituciones. Basado en Santiago.</p>
+            <p class="contact-bio">Realizador audiovisual chileno (1993) con más de una década de trayectoria en dirección, montaje, animación y producción. Su trabajo abarca largometrajes, cortometrajes, videoclips, videoperformance, animación y piezas comerciales. Ha sido parte de festivales internacionales en España, Finlandia y Chile, obteniendo el premio del público en FECICH con su largometraje Las Veletas. Colabora con artistas, músicos, marcas e instituciones culturales. Basado en Santiago de Chile.</p>
             <div class="contact-divider"></div>
             <div class="contact-buttons">
                 <a href="mailto:benjaminp1993@gmail.com">Email</a>
@@ -1354,14 +1344,6 @@
         const activeBar = document.querySelector(`.landing-bar[data-category="${category}"]`);
         if (activeBar) activeBar.classList.add('active-bar');
 
-        // Copy the iframe src to the background video layer
-        const videoBgLayer = document.getElementById('videoBgLayer');
-        const sourceIframe = document.getElementById('video-' + category);
-        if (sourceIframe) {
-            videoBgLayer.innerHTML = `<iframe src="${sourceIframe.src}" allow="autoplay" allowfullscreen></iframe>`;
-            videoBgLayer.classList.add('active');
-        }
-
         // Filter and populate works
         populateWorksList(category);
 
@@ -1416,11 +1398,6 @@
     // ============================================================
     portfolioBack.addEventListener('click', () => {
         closeWork();
-
-        // Hide video background layer
-        const videoBgLayer = document.getElementById('videoBgLayer');
-        videoBgLayer.classList.remove('active');
-        videoBgLayer.innerHTML = '';
 
         // Remove active bar
         document.querySelectorAll('.landing-bar').forEach(b => b.classList.remove('active-bar'));
@@ -1506,6 +1483,7 @@
         });
     }
 
+    // Escape key
     // Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
