@@ -135,12 +135,15 @@
 
         /* When in portfolio mode, hide landing but show active bar as right panel video */
         .landing.in-portfolio {
+            opacity: 1 !important;
+            transform: none !important;
             pointer-events: none;
         }
 
         .landing.in-portfolio::before,
         .landing.in-portfolio .landing-name {
             opacity: 0 !important;
+            display: none;
         }
 
         .landing.in-portfolio .landing-bar {
@@ -152,6 +155,7 @@
             height: 100vh;
             pointer-events: none;
             z-index: 201;
+            flex: none;
         }
 
         .landing.in-portfolio .landing-bar.active-bar {
@@ -161,6 +165,7 @@
         .landing.in-portfolio .landing-bar .landing-bar-label,
         .landing.in-portfolio .landing-bar::after {
             opacity: 0 !important;
+            display: none;
         }
 
         /* Artist name - styles defined above in intro animation */
@@ -496,8 +501,8 @@
         .contact-modal-close:hover { color: var(--color-text); }
 
         .contact-photo {
-            width: 150px;
-            height: 150px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
             object-fit: cover;
             object-position: center 20%;
@@ -890,7 +895,7 @@
             <img class="contact-photo" src="foto-contacto.jpg" alt="Benjamín Pérez">
             <div class="contact-name">Benjamín Pérez</div>
             <div class="contact-alias">Bautista Bermuda</div>
-            <p class="contact-bio">Realizador audiovisual chileno (1993) con más de una década de trayectoria en dirección, montaje, animación y producción. Su trabajo abarca largometrajes, cortometrajes, videoclips, videoperformance, animación y piezas comerciales. Ha sido parte de festivales internacionales en España, Finlandia y Chile, obteniendo el premio del público en FECICH con su largometraje Las Veletas. Colabora con artistas, músicos, marcas e instituciones culturales. Basado en Santiago de Chile.</p>
+            <p class="contact-bio">Realizador audiovisual chileno con más de una década de trayectoria en dirección, montaje, animación y producción. Su trabajo abarca largometrajes, cortometrajes, videoclips, videoperformance, animación y piezas comerciales. Ha sido parte de festivales internacionales en España, Finlandia y Chile, obteniendo el premio del público en FECICH con su largometraje Las Veletas. Colabora con artistas, músicos, marcas e instituciones culturales. Basado en Santiago de Chile.</p>
             <div class="contact-divider"></div>
             <div class="contact-buttons">
                 <a href="mailto:benjaminp1993@gmail.com">Email</a>
