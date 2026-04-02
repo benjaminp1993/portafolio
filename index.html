@@ -166,6 +166,15 @@
             opacity: 1;
         }
 
+        /* In portfolio mode, fit video to height, crop sides */
+        .landing.in-portfolio .landing-bar-bg iframe {
+            width: 177.78vh; /* 16:9 ratio: 100vh * 16/9 */
+            height: 100vh;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
         .landing.in-portfolio .landing-bar .landing-bar-label,
         .landing.in-portfolio .landing-bar::after {
             opacity: 0 !important;
