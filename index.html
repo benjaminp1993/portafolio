@@ -166,13 +166,13 @@
             opacity: 1;
         }
 
-        /* In portfolio mode, fit video to height, crop sides */
+        /* In portfolio mode, fit video to panel with minimal crop */
         .landing.in-portfolio .landing-bar-bg iframe {
-            width: 177.78vh; /* 16:9 ratio: 100vh * 16/9 */
-            height: 100vh;
-            top: 0;
+            width: 200%;
+            height: 200%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
         }
 
         .landing.in-portfolio .landing-bar .landing-bar-label,
