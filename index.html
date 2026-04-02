@@ -159,6 +159,7 @@
             z-index: 201;
             flex: none;
             transition: opacity 0.5s ease;
+            cursor: default;
         }
 
         .landing.in-portfolio .landing-bar.active-bar {
@@ -168,6 +169,11 @@
         .landing.in-portfolio .landing-bar .landing-bar-label,
         .landing.in-portfolio .landing-bar::after {
             opacity: 0 !important;
+        }
+
+        /* When a work detail is open, hide landing entirely so it doesn't block */
+        .landing.work-open {
+            z-index: -1 !important;
         }
 
         /* Artist name - styles defined above in intro animation */
@@ -1445,14 +1451,16 @@
         // Transition: fade to black, switch, fade from black
         const transition = document.getElementById('pageTransition');
         transition.classList.add('active');
-        document.getElementById('contactTrigger').classList.add('light');
 
         setTimeout(() => {
+            // While black: switch everything
             landing.classList.add('exit');
             landing.classList.add('in-portfolio');
             portfolioPage.classList.add('active');
             portfolioPage.classList.add('visible');
+            document.getElementById('contactTrigger').classList.add('light');
 
+            // Fade from black
             setTimeout(() => {
                 transition.classList.remove('active');
             }, 300);
@@ -1562,9 +1570,8 @@
         workDetail.classList.add('active');
         workDetail.scrollTop = 0;
 
-        // Hide the landing video bar so work detail is visible and clickable
-        const activeBar = document.querySelector('.landing-bar.active-bar');
-        if (activeBar) activeBar.style.visibility = 'hidden';
+        // Hide the entire landing so nothing blocks the work detail
+        landing.classList.add('work-open');
 
         // Highlight
         document.querySelectorAll('.works-list a').forEach(a => a.classList.remove('active'));
@@ -1579,8 +1586,7 @@
         document.querySelectorAll('.works-list a').forEach(a => a.classList.remove('active'));
 
         // Show the landing video bar again
-        const activeBar = document.querySelector('.landing-bar.active-bar');
-        if (activeBar) activeBar.style.visibility = 'visible';
+        landing.classList.remove('work-open');
     }
 
     workDetailBack.addEventListener('click', closeWork);
