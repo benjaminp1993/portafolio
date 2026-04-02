@@ -422,12 +422,11 @@
             right: 1.5rem;
             z-index: 250;
             opacity: 0;
-            transition: opacity 0.5s ease 3.5s, right 0.5s ease;
         }
 
         .contact-trigger.visible {
             opacity: 1;
-            transition: opacity 0.5s ease, right 0.5s ease;
+            transition: opacity 0.5s ease;
         }
 
         .contact-trigger.light {
@@ -1563,9 +1562,9 @@
         workDetail.classList.add('active');
         workDetail.scrollTop = 0;
 
-        // Hide the landing video bar so work detail is visible
+        // Hide the landing video bar so work detail is visible and clickable
         const activeBar = document.querySelector('.landing-bar.active-bar');
-        if (activeBar) activeBar.style.opacity = '0';
+        if (activeBar) activeBar.style.visibility = 'hidden';
 
         // Highlight
         document.querySelectorAll('.works-list a').forEach(a => a.classList.remove('active'));
@@ -1581,7 +1580,7 @@
 
         // Show the landing video bar again
         const activeBar = document.querySelector('.landing-bar.active-bar');
-        if (activeBar) activeBar.style.opacity = '1';
+        if (activeBar) activeBar.style.visibility = 'visible';
     }
 
     workDetailBack.addEventListener('click', closeWork);
